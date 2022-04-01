@@ -15,6 +15,8 @@ Taskgram создан, чтобы упростить ведение замето
 Временной интервал можно задавать через конфигурационный файл или аргементы командной строки. Поддерживаемые форматы даты - `m`, `h`, `d` и `w`.
 Например `1w3d10h` - это 1 неделя, 3 дня и 10 часов.
 
+Для доступа в API Notion необходимо получить у администратора токен (подробнее в [документации](https://developers.notion.com/docs/getting-started) Notion). Достаточно иметь права на [чение контента](https://developers.notion.com/reference/capabilities#read-content) из базы и права на получение информации о [пользователях](https://developers.notion.com/reference/capabilities#user-capabilities) без email.
+
 ## Build
 ```
 make

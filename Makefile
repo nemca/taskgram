@@ -1,12 +1,17 @@
 PROJECTNAME := taskgram
+GOPATH := $(shell go env GOPATH)
 
-.PHONY: build clean help
+.PHONY: build install clean help
 
 all: build
 
 ## build: Compile the binary.
 build:
 	go build -o $(PROJECTNAME) cmd/main.go
+
+## install: Install to $GOBIN path.
+install: build
+	install $(PROJECTNAME) $(GOPATH)/bin
 
 ## clean: Cleanup binary.
 clean:

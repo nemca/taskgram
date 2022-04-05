@@ -61,3 +61,11 @@ func (t *Tasks) String() string {
 
 	return buf.String()
 }
+
+// NotesLen returns number of notes in tasks list
+func (t *Tasks) NotesLen() (counter int) {
+	for _, task := range *t {
+		counter += len(task.Notes)
+	}
+	return
+}

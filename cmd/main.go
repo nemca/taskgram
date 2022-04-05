@@ -127,11 +127,11 @@ func main() {
 	wg.Wait()
 
 	// Print search results
-	if len(doneTasks) > 0 {
+	if doneTasks.NotesLen() > 0 {
 		fmt.Println("YESTERDAY:")
 		fmt.Println(doneTasks.String())
 	}
-	if len(todayTasks) > 0 {
+	if todayTasks.NotesLen() > 0 {
 		fmt.Println("TODAY:")
 		fmt.Println(todayTasks.String())
 	}

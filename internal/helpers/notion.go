@@ -30,6 +30,7 @@ import (
 const (
 	propertyFilterAssign string = "Assign"
 	propertyDescription  string = "Description"
+	propertyProject      string = "Project"
 )
 
 var (
@@ -224,6 +225,14 @@ func NotionQueryGetNotes(client *notionapi.Client, page *notionapi.Page, searchT
 		return
 	}
 	task.URL = page.URL
+	if projectProperty, ok := page.Properties[propertyProject]; ok {
+		// cast to MiltiSelectProperty interface
+		if project, ok := projectProperty.(*notionapi.MultiSelectProperty); ok {
+			for _, ms := range project.MultiSelect {
+				task.Projects = append(task.Projects, ms.Name)
+			}
+		}
+	}
 	// Workflow notes
 	// get page content
 	pageContent, err := client.Block.Get(context.Background(), notionapi.BlockID(page.ID))

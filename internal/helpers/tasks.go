@@ -19,13 +19,15 @@ package helpers
 import (
 	"bytes"
 	"fmt"
+	"strings"
 )
 
 // Task represents a task
 type Task struct {
-	Title string
-	URL   string
-	Notes []string
+	Title    string
+	URL      string
+	Projects []string
+	Notes    []string
 }
 
 // Tasks represents list of tasks
@@ -34,7 +36,13 @@ type Tasks []Task
 // String implements fmt.Stringer interface
 func (t *Task) String() string {
 	var buf bytes.Buffer
-	fmt.Fprintf(&buf, "- [%s](%s)\n", t.Title, t.URL)
+
+	fmt.Fprintf(&buf, "- [%s](%s) ", t.Title, t.URL)
+	for _, p := range t.Projects {
+		fmt.Fprintf(&buf, "#%s ", strings.ToLower(p))
+	}
+	fmt.Fprintln(&buf)
+
 	for _, note := range t.Notes {
 		fmt.Fprintf(&buf, "  - %s\n", note)
 	}

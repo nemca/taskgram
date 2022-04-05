@@ -214,6 +214,7 @@ func GetPageTitle(page *notionapi.Page) (string, error) {
 
 func NotionQueryGetNotes(client *notionapi.Client, page *notionapi.Page, searchTimeStart time.Time, headingName string, taskCh chan Task, wg *sync.WaitGroup, done chan struct{}) {
 	defer wg.Done()
+
 	var task Task
 	var err error
 
@@ -225,6 +226,8 @@ func NotionQueryGetNotes(client *notionapi.Client, page *notionapi.Page, searchT
 		return
 	}
 	task.URL = page.URL
+	// Try to get page property Project with type multiselect
+	// and read projects to task.Projects for tags
 	if projectProperty, ok := page.Properties[propertyProject]; ok {
 		// cast to MiltiSelectProperty interface
 		if project, ok := projectProperty.(*notionapi.MultiSelectProperty); ok {

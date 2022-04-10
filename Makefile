@@ -7,7 +7,7 @@ all: build
 
 ## build: Compile the binary.
 build:
-	go build -o $(PROJECTNAME) cmd/main.go
+	go build -o $(PROJECTNAME) cmd/$(PROJECTNAME)/main.go
 
 ## install: Install to $GOBIN path.
 install: build

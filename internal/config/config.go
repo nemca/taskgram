@@ -18,54 +18,47 @@ package config
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Notion NotionConfig `mapstructure:"notion"`
-	Search SearchConfig `mapstructure:"search"`
+	Targets []TargetsConfig `mapstructure:"targets"`
+	Search  SearchConfig    `mapstructure:"search_config"`
+}
+
+type TargetsConfig struct {
+	Name   string       `mapstructure:"name"`
+	Type   string       `mapstructure:"type"`
+	Notion NotionConfig `mapstructure:"notion_config"`
 }
 
 type SearchConfig struct {
 	LastEditedTimeStart string `mapstructure:"lastEditedTimeStart"`
 	LastEditedTimeEnd   string `mapstructure:"lastEditedTimeEnd"`
-	HeadingDoneName     string `mapstructure:"headingDoneName"`
-	HeadingToDoName     string `mapstructure:"headingToDoName"`
 }
 
 type NotionConfig struct {
-	APIKey     string `mapstructure:"apiKey"`
-	DatabaseID string `mapstructure:"databaseID"`
-	UserID     string `maspstructure:"userID"`
-	Username   string `mapstructure:"username"`
-	Timeout    string `mapstructure:"timeout"`
+	APIKey          string        `mapstructure:"apiKey"`
+	DatabaseID      string        `mapstructure:"databaseID"`
+	UserID          string        `maspstructure:"userID"`
+	Username        string        `mapstructure:"username"`
+	Timeout         time.Duration `mapstructure:"timeout"`
+	HeadingDoneName string        `mapstructure:"headingDoneName"`
+	HeadingToDoName string        `mapstructure:"headingToDoName"`
 }
 
 func Init() (*Config, error) {
 	// Command line flags
-	pflag.StringP("apikey", "a", "", "You Notion's API key.")
-	pflag.StringP("databaseid", "d", "", "The Database UUID where you store notes.")
-	pflag.StringP("username", "u", "", "Your preferred name in Notion account.")
-	pflag.StringP("userid", "i", "", "Your Notion's user ID")
-	pflag.StringP("timeout", "t", "10s", "Timeout for Notion's requests.")
 	pflag.StringP("starttime", "s", "24h", "Start time when notes was last updated.")
 	pflag.StringP("endtime", "e", "", "End time when notes was last updated.")
-	pflag.StringP("doneblockkname", "n", "Workflow notes", "Name of heading block where you write done notes.")
-	pflag.StringP("todoblockkname", "b", "TODO", "Name of heading block where you write ToDo notes.")
 	pflag.Parse()
 
 	// Bind command line flags
-	viper.BindPFlag("notion.apiKey", pflag.Lookup("apikey"))
-	viper.BindPFlag("notion.databaseID", pflag.Lookup("databaseid"))
-	viper.BindPFlag("notion.username", pflag.Lookup("username"))
-	viper.BindPFlag("notion.userID", pflag.Lookup("userid"))
-	viper.BindPFlag("notion.timeout", pflag.Lookup("timeout"))
-	viper.BindPFlag("search.lastEditedTimeStart", pflag.Lookup("starttime"))
-	viper.BindPFlag("search.lastEditedTimeEnd", pflag.Lookup("endtime"))
-	viper.BindPFlag("search.headingDoneName", pflag.Lookup("doneblockkname"))
-	viper.BindPFlag("search.headingToDoName", pflag.Lookup("todoblockkname"))
+	viper.BindPFlag("search_config.lastEditedTimeStart", pflag.Lookup("starttime"))
+	viper.BindPFlag("search_config.lastEditedTimeEnd", pflag.Lookup("endtime"))
 
 	// Name of config file (without extension)
 	viper.SetConfigName(".taskgram")

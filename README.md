@@ -62,12 +62,13 @@ targets:
       headingToDoName: "TODO"
 
 search_config:
-  # Valid time units are "m", "h", "d", "w".
+  # Valid time units are "m", "h", "d", "w"
+  # or special words "today" and "yesterday".
   # Start time when notes was last updated.
-  lastEditedTimeStart: "24h"
+  lastEditedTimeStart: "today"
   # End time when notes was last updated.
   # Empty string is mean now.
-  lastEditedTimeEnd: ""
+  lastEditedTimeEnd: "2h"
 ```
 
 ## Help

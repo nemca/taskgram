@@ -31,9 +31,18 @@ var unitMap = map[string]int64{
 // ParseDuration parses a duration string.
 // A duration string is a possibly signed sequence of
 // decimal numbers, each with optional fraction and a unit suffix,
-// such as "300ms", "-1.5h" or "2h45m".
+// such as "300ms", "-1.5h" or "2h45m" or special words "today" and "yesterday".
 // Valid time units are "m", "h", "d", "w".
 func ParseDuration(s string) (time.Duration, error) {
+	// today and yesterday
+	switch s {
+	case "today":
+		start := startOfDay(time.Now())
+		return time.Since(start), nil
+	case "yesterday":
+		start := startOfDay(time.Now().Add(-24 * time.Hour))
+		return time.Since(start), nil
+	}
 	// [-+]?([0-9]*(\.[0-9]*)?[a-z]+)+
 	orig := s
 	var d int64
@@ -187,4 +196,10 @@ func leadingFraction(s string) (x int64, scale float64, rem string) {
 		scale *= 10
 	}
 	return x, scale, s[i:]
+}
+
+// startOfDay returns start of the day times
+func startOfDay(t time.Time) time.Time {
+	year, month, day := t.Date()
+	return time.Date(year, month, day, 0, 0, 0, 0, t.Location())
 }

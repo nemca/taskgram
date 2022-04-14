@@ -28,6 +28,16 @@ var unitMap = map[string]int64{
 	"w": int64(time.Hour) * 168,
 }
 
+// ParseDate parses a date string.
+func ParseDate(s string) (time.Duration, error) {
+	t, err := time.Parse("2006-01-02", s)
+	if err != nil {
+		return 0, errors.New("time: invalid date " + quote(s))
+	}
+
+	return time.Since(t), nil
+}
+
 // ParseDuration parses a duration string.
 // A duration string is a possibly signed sequence of
 // decimal numbers, each with optional fraction and a unit suffix,

@@ -64,17 +64,27 @@ targets:
 search_config:
   # Valid time units are "m", "h", "d", "w"
   # or special words "today" and "yesterday".
+  # Dates format is YYYY-MM-DD.
+  # Should used either only dates or only times.
+  #
   # Start time when notes was last updated.
   lastEditedTimeStart: "today"
+  # Start date when notes was last updated.
+  lastEditedDateStart: ""
   # End time when notes was last updated.
   # Empty string is mean now.
   lastEditedTimeEnd: "2h"
+  # End date when notes was last updated.
+  # Empty string is mean now.
+  lastEditedDateEnd: ""
 ```
 
 ## Help
 ```
 $ taskgram --help
 Usage of ./taskgram:
-  -e, --endtime string          End time when notes was last updated.
-  -s, --starttime string        Start time when notes was last updated. (default "24h")
+  -j, --enddate string     End date when notes was last updated.
+  -e, --endtime string     End time when notes was last updated.
+  -d, --startdate string   Start date when notes was last updated.
+  -s, --starttime string   Start time when notes was last updated. (default "24h")
 ```

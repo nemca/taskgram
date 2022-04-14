@@ -19,6 +19,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/nemca/taskgram/internal/config"
@@ -36,21 +37,49 @@ func main() {
 		log.Fatalf("config is empty")
 	}
 
+	// Check that either only dates or only times
+	if len(cfg.Search.LastEditedTimeEnd) > 0 &&
+		(len(cfg.Search.LastEditedDateStart) > 0 || len(cfg.Search.LastEditedDateEnd) > 0) {
+		fmt.Printf("Please, use either only dates or only times for search.\n")
+		os.Exit(1)
+	}
+
 	// Prepare times for search requests
 	var searchTimeStart, searchTimeEnd time.Time
-	lastEditedTimeStart, err := helpers.ParseDuration(cfg.Search.LastEditedTimeStart)
-	if err != nil {
-		log.Fatalf("convert start last edited time from config: %v", err)
-	}
-	searchTimeStart = time.Now().Add(-lastEditedTimeStart)
-	// If end last edited time not set use now
-	searchTimeEnd = time.Now()
-	if len(cfg.Search.LastEditedTimeEnd) > 1 {
-		lastEditedTimeEnd, err := helpers.ParseDuration(cfg.Search.LastEditedTimeEnd)
+
+	// Parse times from config to time.Time
+	if len(cfg.Search.LastEditedTimeStart) > 0 {
+		lastEditedTimeStart, err := helpers.ParseDuration(cfg.Search.LastEditedTimeStart)
 		if err != nil {
-			log.Fatalf("convert end last edited time from config: %v", err)
+			log.Fatalf("convert start last edited time from config: %v", err)
 		}
-		searchTimeEnd = time.Now().Add(-lastEditedTimeEnd)
+		searchTimeStart = time.Now().Add(-lastEditedTimeStart)
+		// If end last edited time not set use now
+		searchTimeEnd = time.Now()
+		if len(cfg.Search.LastEditedTimeEnd) > 0 {
+			lastEditedTimeEnd, err := helpers.ParseDuration(cfg.Search.LastEditedTimeEnd)
+			if err != nil {
+				log.Fatalf("convert end last edited time from config: %v", err)
+			}
+			searchTimeEnd = time.Now().Add(-lastEditedTimeEnd)
+		}
+	}
+	// Parse dates from config to time.Time
+	if len(cfg.Search.LastEditedDateStart) > 0 {
+		lastEditedDateStart, err := helpers.ParseDate(cfg.Search.LastEditedDateStart)
+		if err != nil {
+			log.Fatalf("convert start last edited date from config: %v", err)
+		}
+		searchTimeStart = time.Now().Add(-lastEditedDateStart)
+		// If end last edited date not set use now
+		searchTimeEnd = time.Now()
+		if len(cfg.Search.LastEditedDateEnd) > 0 {
+			lastEditedDateEnd, err := helpers.ParseDate(cfg.Search.LastEditedDateEnd)
+			if err != nil {
+				log.Fatalf("convert end last edited date from config: %v", err)
+			}
+			searchTimeEnd = time.Now().Add(-lastEditedDateEnd)
+		}
 	}
 
 	// Show the times for search

@@ -37,7 +37,9 @@ type TargetsConfig struct {
 
 type SearchConfig struct {
 	LastEditedTimeStart string `mapstructure:"lastEditedTimeStart"`
+	LastEditedDateStart string `mapstructure:"lastEditedDateStart"`
 	LastEditedTimeEnd   string `mapstructure:"lastEditedTimeEnd"`
+	LastEditedDateEnd   string `mapstructure:"lastEditedDateEnd"`
 }
 
 type NotionConfig struct {
@@ -53,12 +55,16 @@ type NotionConfig struct {
 func Init() (*Config, error) {
 	// Command line flags
 	pflag.StringP("starttime", "s", "24h", "Start time when notes was last updated.")
+	pflag.StringP("startdate", "d", "", "Start date when notes was last updated.")
 	pflag.StringP("endtime", "e", "", "End time when notes was last updated.")
+	pflag.StringP("enddate", "j", "", "End date when notes was last updated.")
 	pflag.Parse()
 
 	// Bind command line flags
 	viper.BindPFlag("search_config.lastEditedTimeStart", pflag.Lookup("starttime"))
+	viper.BindPFlag("search_config.lastEditedDateStart", pflag.Lookup("startdate"))
 	viper.BindPFlag("search_config.lastEditedTimeEnd", pflag.Lookup("endtime"))
+	viper.BindPFlag("search_config.lastEditediDateEnd", pflag.Lookup("enddate"))
 
 	// Name of config file (without extension)
 	viper.SetConfigName(".taskgram")

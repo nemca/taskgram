@@ -30,9 +30,10 @@ type Config struct {
 }
 
 type TargetsConfig struct {
-	Name   string       `mapstructure:"name"`
-	Type   string       `mapstructure:"type"`
-	Notion NotionConfig `mapstructure:"notion_config"`
+	Name           string               `mapstructure:"name"`
+	Type           string               `mapstructure:"type"`
+	Notion         NotionConfig         `mapstructure:"notion_config"`
+	GoogleCalendar GoogleCalendarConfig `mapstructure:"google_calendar_config"`
 }
 
 type SearchConfig struct {
@@ -50,6 +51,13 @@ type NotionConfig struct {
 	Timeout         time.Duration `mapstructure:"timeout"`
 	HeadingDoneName string        `mapstructure:"headingDoneName"`
 	HeadingToDoName string        `mapstructure:"headingToDoName"`
+}
+
+type GoogleCalendarConfig struct {
+	CalendarID      string        `mapstructure:"calendarID"`
+	CredentialsPath string        `mapstructure:"credentials_path"`
+	TokenPath       string        `mapstructure:"token_path"`
+	Timeout         time.Duration `mapstructure:"timeout"`
 }
 
 func Init() (*Config, error) {

@@ -47,6 +47,8 @@ func main() {
 	// Prepare times for search requests
 	var searchTimeStart, searchTimeEnd time.Time
 
+	tomorrow, _ := helpers.ParseDuration("tomorrow")
+	searchTimeEnd = time.Now().Add(-tomorrow)
 	// Parse times from config to time.Time
 	if len(cfg.Search.LastEditedTimeStart) > 0 {
 		lastEditedTimeStart, err := helpers.ParseDuration(cfg.Search.LastEditedTimeStart)
@@ -72,7 +74,6 @@ func main() {
 		}
 		searchTimeStart = time.Now().Add(-lastEditedDateStart)
 		// If end last edited date not set use now
-		searchTimeEnd = time.Now()
 		if len(cfg.Search.LastEditedDateEnd) > 0 {
 			lastEditedDateEnd, err := helpers.ParseDate(cfg.Search.LastEditedDateEnd)
 			if err != nil {
@@ -87,6 +88,8 @@ func main() {
 
 	var doneTasks models.Tasks
 	var todayTasks models.Tasks
+	var doneEvents models.Events
+	var todayEvents models.Events
 	searchConfig := &models.SearchConfig{
 		LastEditedTimeStart: searchTimeStart,
 		LastEditedTimeEnd:   searchTimeEnd,
@@ -107,16 +110,29 @@ func main() {
 			}
 			doneTasks = append(doneTasks, done...)
 			todayTasks = append(todayTasks, today...)
+		case "google_calendar":
+			calendarRepo, err := repository.NewCalendarRepository(target.Name, &target.GoogleCalendar)
+			if err != nil {
+				return
+			}
+			yesterday, today, err := calendarRepo.GetEvents(cfg, searchConfig)
+			if err != nil {
+				return
+			}
+			doneEvents = append(doneEvents, yesterday...)
+			todayEvents = append(todayEvents, today...)
 		}
 	}
 
 	// Print search results
-	if doneTasks.NotesLen() > 0 {
+	if doneTasks.NotesLen() > 0 || doneEvents.EventsLen() > 0 {
 		fmt.Println("YESTERDAY:")
-		fmt.Println(doneTasks.String())
+		fmt.Print(doneTasks.String())
+		fmt.Println(doneEvents.String())
 	}
-	if todayTasks.NotesLen() > 0 {
+	if todayTasks.NotesLen() > 0 || todayEvents.EventsLen() > 0 {
 		fmt.Println("TODAY:")
-		fmt.Println(todayTasks.String())
+		fmt.Print(todayTasks.String())
+		fmt.Println(todayEvents.String())
 	}
 }

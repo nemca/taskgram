@@ -52,6 +52,9 @@ func ParseDuration(s string) (time.Duration, error) {
 	case "yesterday":
 		start := startOfDay(time.Now().Add(-24 * time.Hour))
 		return time.Since(start), nil
+	case "tomorrow":
+		end := endOfDay(time.Now())
+		return time.Since(end), nil
 	}
 	// [-+]?([0-9]*(\.[0-9]*)?[a-z]+)+
 	orig := s
@@ -212,4 +215,9 @@ func leadingFraction(s string) (x int64, scale float64, rem string) {
 func startOfDay(t time.Time) time.Time {
 	year, month, day := t.Date()
 	return time.Date(year, month, day, 0, 0, 0, 0, t.Location())
+}
+
+func endOfDay(t time.Time) time.Time {
+	start := startOfDay(t)
+	return start.Add(24 * time.Hour)
 }

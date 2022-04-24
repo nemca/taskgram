@@ -3,11 +3,12 @@
 Taskgram создан, чтобы упростить ведение заметок о проделанной и запланированной работе в разных местах.
 Например вывод `taskgram` в формате Markdown легко скопировать в [Status Hero](https://statushero.com/).
 
-На данный момент реализована поддержка поиска по [Notion](https://www.notion.so).
+На данный момент реализована поддержка поиска по [Notion](https://www.notion.so) и [Google Calendar](https://calendar.google.com/).
 `taskgram` ищет в базе данных Notion, которую вы указали к конфиге, все задачи где вы являетесь исполнителем.
 Из этого списка задач отбираются те, которые изменялись в указанный период времени и которые имеют у себя на странице блок заголовок (`Heading`), настраиваемый через переменную конфига `search.headingDoneName`, например `Workflow notes`. Внутри блока отбираются заметки в формате блоков `Text`, `Bullet List` и `Numbered List`. Эти заметки будут в выводе после тега `YESTERDAY:`.
+Если в календаре были события, то они добавяться списком с загаловком `Meetings`.
 
-Для тега `TODAY:` отбираются все заметки внутри блока загловка `search.headingToDoName` независимо от времени добавления.
+Для тега `TODAY:` отбираются все заметки внутри блока загловка `search.headingToDoName` независимо от времени добавления и все события календаря.
 
 ![Notes examples](assets/notes_example.png)
 
@@ -35,6 +36,9 @@ YESTERDAY:
 TODAY:
 - [Development taskgram](https://www.notion.so/Development-taskgram-970ce9cf59e94fadbbfd2936d6151bb6)
   - Parsing todo block
+- Meetings
+  - DevOps daily meetings 2.0 (DDM)
+  - Cosmos weekly sync
 ```
 
 ## Config example
@@ -60,6 +64,14 @@ targets:
       headingDoneName: "Workflow notes"
       # Name of heading block where you whire todo notes.
       headingToDoName: "TODO"
+
+  - name: "Google calendar"
+    type: "google_calendar"
+    google_calendar_config:
+      calendarID: "johndoe@example.com"
+      credentials_path: "/Users/john/.credentials.json"
+      token_path: "/Users/john/.google_calendar_token.json"
+      timeout: "10s"
 
 search_config:
   # Valid time units are "m", "h", "d", "w"

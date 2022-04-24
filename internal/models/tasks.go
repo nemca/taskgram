@@ -55,7 +55,7 @@ func (t *Tasks) String() string {
 	var buf bytes.Buffer
 	for _, task := range *t {
 		if len(task.Notes) > 0 {
-			fmt.Fprintf(&buf, task.String())
+			fmt.Fprint(&buf, task.String())
 		}
 	}
 

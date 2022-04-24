@@ -61,10 +61,10 @@ func Init() (*Config, error) {
 	pflag.Parse()
 
 	// Bind command line flags
-	viper.BindPFlag("search_config.lastEditedTimeStart", pflag.Lookup("starttime"))
-	viper.BindPFlag("search_config.lastEditedDateStart", pflag.Lookup("startdate"))
-	viper.BindPFlag("search_config.lastEditedTimeEnd", pflag.Lookup("endtime"))
-	viper.BindPFlag("search_config.lastEditediDateEnd", pflag.Lookup("enddate"))
+	_ = viper.BindPFlag("search_config.lastEditedTimeStart", pflag.Lookup("starttime"))
+	_ = viper.BindPFlag("search_config.lastEditedDateStart", pflag.Lookup("startdate"))
+	_ = viper.BindPFlag("search_config.lastEditedTimeEnd", pflag.Lookup("endtime"))
+	_ = viper.BindPFlag("search_config.lastEditediDateEnd", pflag.Lookup("enddate"))
 
 	// Name of config file (without extension)
 	viper.SetConfigName(".taskgram")

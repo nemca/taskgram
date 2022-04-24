@@ -6,8 +6,11 @@ GOPATH := $(shell go env GOPATH)
 all: build
 
 ## build: Compile the binary.
-build:
+build: lint
 	go build -o $(PROJECTNAME) cmd/$(PROJECTNAME)/main.go
+
+lint:
+	golangci-lint run ./...
 
 ## install: Install to $GOBIN path.
 install: build
